@@ -126,6 +126,53 @@
     select:focus, input:focus { border-color: var(--gold); }
     select option { background: var(--ink); }
 
+    /* Card theme segmented toggle */
+    .theme-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 4px;
+    }
+    .theme-btn {
+      flex: 1;
+      padding: 0.6rem;
+      background: none;
+      border: none;
+      color: var(--steel);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .theme-btn.active { background: var(--gold); color: var(--ink); }
+
+    /* Product image upload feedback */
+    .image-feedback {
+      display: none;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.6rem;
+    }
+    .image-feedback img {
+      width: 36px; height: 36px;
+      object-fit: contain;
+      background: #F5F6F8;
+    }
+    .image-feedback button {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--steel);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.7rem;
+      cursor: pointer;
+    }
+    .image-feedback button:hover { color: var(--red); border-color: var(--red); }
+
     .status-bar {
       margin-top: 1.25rem;
       padding: 0.75rem 1rem;
@@ -192,15 +239,44 @@
 
     /* ── THE CARD (1080×1080 target, scaled for display) ── */
     #preorder-card {
+      /* theme tokens — overridden by .theme-light below */
+      --card-bg: var(--ink);
+      --tile-bg: var(--ink2);
+      --headline: #ffffff;
+      --eyebrow-c: var(--gold);
+      --meta-deadline: var(--gold);
+      --meta-eta: #ffffff;
+      --cta-bg: var(--ink2);
+      --cta-label: var(--steel);
+      --cta-url: var(--gold);
+      --wordmark-plain: #ffffff;
+      --sq-a: rgba(44,95,174,0.2);
+      --sq-b: rgba(225,50,57,0.18);
+
       width: 1080px;
       min-height: 1080px;
-      background: var(--ink);
+      background: var(--card-bg);
       position: relative;
       overflow: hidden;
       transform-origin: top left;
       transform: scale(0.5);
       margin-bottom: -540px;
       font-family: 'Poppins', sans-serif;
+      transition: background 0.15s;
+    }
+    #preorder-card.theme-light {
+      --card-bg: #ffffff;
+      --tile-bg: #F5F6F8;
+      --headline: var(--ink);
+      --eyebrow-c: var(--blue);
+      --meta-deadline: var(--red);
+      --meta-eta: var(--ink);
+      --cta-bg: var(--ink);
+      --cta-label: var(--gold);
+      --cta-url: #ffffff;
+      --wordmark-plain: var(--ink);
+      --sq-a: rgba(44,95,174,0.28);
+      --sq-b: rgba(225,50,57,0.24);
     }
 
     /* Decorative rotated square outlines (replaces old glow circles) */
@@ -209,6 +285,50 @@
       border: 8px solid;
       pointer-events: none;
       z-index: 1;
+    }
+    .bg-square-a { border-color: var(--sq-a); }
+    .bg-square-b { border-color: var(--sq-b); }
+
+    /* Product image frame — always a light mat so any product shot stays visible on either theme */
+    .card-image-frame {
+      position: relative; z-index: 2;
+      margin: 36px 56px 0;
+      height: 420px;
+      background: #F5F6F8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .card-image-frame img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    /* CTA / link segment */
+    .cta-bar {
+      position: relative; z-index: 2;
+      margin: 40px 56px 0;
+      background: var(--cta-bg);
+      padding: 24px 28px;
+      border-left: 4px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .cta-bar-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cta-label);
+    }
+    .cta-bar-url {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--cta-url);
     }
 
     /* Header row inside card */
@@ -227,7 +347,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: -0.01em;
-      color: #fff;
+      color: var(--wordmark-plain);
       line-height: 1;
     }
     .card-wordmark .w-blue { color: var(--blue); }
@@ -259,7 +379,7 @@
       font-weight: 700;
       letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--eyebrow-c);
       margin-bottom: 12px;
       display: block;
     }
@@ -268,7 +388,7 @@
       font-size: 5rem;
       font-weight: 700;
       line-height: 0.92;
-      color: #fff;
+      color: var(--headline);
       text-transform: uppercase;
       letter-spacing: -0.01em;
       max-width: 900px;
@@ -277,7 +397,7 @@
 
     /* Price tiles */
     .card-stats { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 48px 56px 0; }
-    .stat-tile { background: var(--ink2); padding: 26px 24px; border-left: 4px solid; }
+    .stat-tile { background: var(--tile-bg); padding: 26px 24px; border-left: 4px solid; }
     .stat-tile .tile-label {
       font-family: 'Space Mono', monospace;
       font-size: 0.85rem;
@@ -291,7 +411,7 @@
       font-family: 'Rajdhani', sans-serif;
       font-size: 2.8rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--headline);
       line-height: 1;
     }
     .dp-panel {
@@ -342,9 +462,9 @@
       font-family: 'Rajdhani', sans-serif;
       font-size: 2.1rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--meta-eta);
     }
-    .meta-item .meta-value.gold-accent { color: var(--gold); }
+    .meta-item .meta-value.deadline-accent { color: var(--meta-deadline); }
 
     /* Footer */
     .card-footer {
@@ -434,6 +554,22 @@
       <input type="text" id="deadline-input" placeholder="e.g. July 15, 2025" value="">
     </div>
   </div>
+  <div style="margin-top:1.25rem;">
+    <label>Card Theme</label>
+    <div class="theme-toggle">
+      <button type="button" id="theme-dark-btn" class="theme-btn active" onclick="setTheme('dark')">Dark</button>
+      <button type="button" id="theme-light-btn" class="theme-btn" onclick="setTheme('light')">Light</button>
+    </div>
+  </div>
+  <div style="margin-top:1.25rem;">
+    <label>Product Image (optional)</label>
+    <input type="file" id="product-image-upload" accept="image/*"
+      style="font-size:0.85rem;color:#94a3b8;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:0.6rem 1rem;width:100%;cursor:pointer;">
+    <div class="image-feedback" id="product-image-feedback">
+      <img id="product-image-thumb" src="" alt="">
+      <button type="button" onclick="removeProductImage()">Remove</button>
+    </div>
+  </div>
   <div id="status" class="status-bar loading" style="display:none"></div>
 </div>
 
@@ -449,8 +585,8 @@
   <div class="preview-scroll">
     <div id="preorder-card">
       <!-- decorative rotated squares -->
-      <div class="bg-square" style="width:220px;height:220px;right:-50px;bottom:60px;border-color:rgba(44,95,174,0.2);transform:rotate(12deg);"></div>
-      <div class="bg-square" style="width:160px;height:160px;left:-40px;top:200px;border-color:rgba(225,50,57,0.18);transform:rotate(-12deg);"></div>
+      <div class="bg-square bg-square-a" style="width:220px;height:220px;right:-50px;bottom:60px;transform:rotate(12deg);"></div>
+      <div class="bg-square bg-square-b" style="width:160px;height:160px;left:-40px;top:200px;transform:rotate(-12deg);"></div>
 
       <!-- top signal stripe -->
       <div class="signal-stripe" style="position:relative;z-index:2;height:14px;"><div class="s-blue"></div><div class="s-red"></div><div class="s-gold"></div></div>
@@ -465,6 +601,11 @@
       <div class="card-tags">
         <div class="tag-slant" style="background:#E13239;"><span class="card-tag-inner" style="color:#fff;">Pre-Order Open</span></div>
         <div class="tag-slant" style="background:#FFC72C;"><span class="card-tag-inner" id="card-eta-tag" style="color:#14161C;">ETA TBA</span></div>
+      </div>
+
+      <!-- product image (optional) -->
+      <div class="card-image-frame" id="card-image-frame" style="display:none;">
+        <img id="card-product-image" src="" alt="Product">
       </div>
 
       <!-- product name -->
@@ -497,12 +638,18 @@
       <div class="card-meta">
         <div class="meta-item">
           <div class="meta-label">Pre-Order Deadline</div>
-          <div class="meta-value gold-accent" id="card-deadline">TBA</div>
+          <div class="meta-value deadline-accent" id="card-deadline">TBA</div>
         </div>
         <div class="meta-item">
           <div class="meta-label">Estimated Arrival (ETA)</div>
           <div class="meta-value" id="card-eta">TBA</div>
         </div>
+      </div>
+
+      <!-- CTA / link segment -->
+      <div class="cta-bar">
+        <span class="cta-bar-label">Reserve Your Slot At</span>
+        <span class="cta-bar-url">cratedropcollective.github.io/preorder</span>
       </div>
 
       <!-- footer -->
@@ -540,9 +687,60 @@
   // ─────────────────────────────────────
   const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSQBLjsB__nTteTD8pPY7wvfQEQUCqLstkfUb8lgfOV_NpVwraiUU07VxZrKyWsmVPE1vyLtv_6ED9Y/pub?gid=0&single=true&output=tsv";
   const LOGO_PATH = "CDCPNGLOGO.png"; // local file — will be loaded as base64
+  const PREORDER_URL = "cratedropcollective.github.io/preorder";
+
+  // Theme tokens for the hi-res (canvas-exported) build — kept as resolved hex
+  // rather than CSS var() since html2canvas's custom-property support is inconsistent.
+  const THEMES = {
+    dark:  { cardBg: '#14161C', tileBg: '#1F222B', headline: '#FFFFFF', eyebrow: '#FFC72C',
+             metaDeadline: '#FFC72C', metaEta: '#FFFFFF', ctaBg: '#1F222B', ctaLabel: '#6B7280',
+             ctaUrl: '#FFC72C', wordmarkPlain: '#FFFFFF', sqA: 'rgba(44,95,174,0.2)', sqB: 'rgba(225,50,57,0.18)' },
+    light: { cardBg: '#FFFFFF', tileBg: '#F5F6F8', headline: '#14161C', eyebrow: '#2C5FAE',
+             metaDeadline: '#E13239', metaEta: '#14161C', ctaBg: '#14161C', ctaLabel: '#FFC72C',
+             ctaUrl: '#FFFFFF', wordmarkPlain: '#14161C', sqA: 'rgba(44,95,174,0.28)', sqB: 'rgba(225,50,57,0.24)' }
+  };
 
   let inventory = [];
   let logoBase64 = null;
+  let productImageBase64 = null;
+  let cardTheme = 'dark';
+
+  // ─────────────────────────────────────
+  // CARD THEME TOGGLE
+  // ─────────────────────────────────────
+  function setTheme(theme) {
+    cardTheme = theme;
+    document.getElementById('theme-dark-btn').classList.toggle('active', theme === 'dark');
+    document.getElementById('theme-light-btn').classList.toggle('active', theme === 'light');
+    document.getElementById('preorder-card').classList.toggle('theme-light', theme === 'light');
+    // Refresh the live preview immediately if one is already showing
+    if (document.getElementById('preview-wrap').classList.contains('visible')) buildCard();
+  }
+
+  // ─────────────────────────────────────
+  // PRODUCT IMAGE UPLOAD
+  // ─────────────────────────────────────
+  function initProductImageUpload() {
+    document.getElementById('product-image-upload').addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        productImageBase64 = e.target.result;
+        document.getElementById('product-image-thumb').src = productImageBase64;
+        document.getElementById('product-image-feedback').style.display = 'flex';
+        if (document.getElementById('preview-wrap').classList.contains('visible')) buildCard();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removeProductImage() {
+    productImageBase64 = null;
+    document.getElementById('product-image-upload').value = '';
+    document.getElementById('product-image-feedback').style.display = 'none';
+    if (document.getElementById('preview-wrap').classList.contains('visible')) buildCard();
+  }
 
   // ─────────────────────────────────────
   // LOAD LOGO AS BASE64 (for html2canvas)
@@ -642,6 +840,18 @@
 
     const dp = Math.ceil(product.unitPrice * 0.3);
 
+    // Theme
+    document.getElementById('preorder-card').classList.toggle('theme-light', cardTheme === 'light');
+
+    // Product image frame
+    const imgFrame = document.getElementById('card-image-frame');
+    if (productImageBase64) {
+      document.getElementById('card-product-image').src = productImageBase64;
+      imgFrame.style.display = 'flex';
+    } else {
+      imgFrame.style.display = 'none';
+    }
+
     document.getElementById('card-name-text').textContent  = product.name;
     document.getElementById('card-unit-price').textContent = '₱' + product.unitPrice.toLocaleString();
     document.getElementById('card-case-price').textContent = '₱' + product.casePrice.toLocaleString();
@@ -670,8 +880,10 @@
     document.getElementById('loading').classList.add('show');
 
     const dp = Math.ceil(product.unitPrice * 0.3);
+    const bg = THEMES[cardTheme].cardBg;
 
     const hires = document.getElementById('preorder-card-hires');
+    hires.style.background = bg;
     hires.innerHTML = buildCardHTML(product, deadline, dp);
 
     await new Promise(r => setTimeout(r, 600));
@@ -679,7 +891,7 @@
     try {
       const canvas = await html2canvas(hires, {
         scale: 2,
-        backgroundColor: '#14161C',
+        backgroundColor: bg,
         useCORS: true,
         allowTaint: true,
         logging: false,
@@ -704,12 +916,13 @@
   // BUILD CARD HTML STRING (for hires)
   // ─────────────────────────────────────
   function buildCardHTML(product, deadline, dp) {
-    const INK = '#14161C', INK2 = '#1F222B', STEEL = '#6B7280', BLUE = '#2C5FAE', RED = '#E13239', GOLD = '#FFC72C';
+    const T = THEMES[cardTheme];
+    const BLUE = '#2C5FAE', RED = '#E13239', GOLD = '#FFC72C', STEEL = '#6B7280';
 
     const logoSrc = logoBase64 || '';
     const logoTag = logoSrc
       ? `<img src="${logoSrc}" style="height:88px;width:auto;display:block;" alt="CDC Logo">`
-      : `<div style="font-family:'Rajdhani',sans-serif;font-size:2.6rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.01em;color:#fff;line-height:1;">CRATE<span style="color:${BLUE};">DROP</span> <span style="color:${GOLD};">COLLECTIVE</span></div>`;
+      : `<div style="font-family:'Rajdhani',sans-serif;font-size:2.6rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.01em;color:${T.wordmarkPlain};line-height:1;">CRATE<span style="color:${BLUE};">DROP</span> <span style="color:${GOLD};">COLLECTIVE</span></div>`;
 
     const stripe = (h, colors = [BLUE, RED, GOLD]) => `
       <div style="position:relative;z-index:2;display:flex;height:${h}px;width:100%;">
@@ -718,6 +931,11 @@
         <div style="flex:1;transform:skewX(-25deg);margin:0 -3px;background:${colors[2]};"></div>
       </div>`;
 
+    const imageBlock = productImageBase64 ? `
+      <div style="position:relative;z-index:2;margin:36px 56px 0;height:420px;background:#F5F6F8;display:flex;align-items:center;justify-content:center;padding:40px;">
+        <img src="${productImageBase64}" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>` : '';
+
     return `
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Poppins:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
@@ -725,8 +943,8 @@
       </style>
 
       <!-- decorative rotated squares -->
-      <div style="position:absolute;width:220px;height:220px;right:-50px;bottom:60px;border:8px solid rgba(44,95,174,0.2);transform:rotate(12deg);pointer-events:none;z-index:1;"></div>
-      <div style="position:absolute;width:160px;height:160px;left:-40px;top:200px;border:8px solid rgba(225,50,57,0.18);transform:rotate(-12deg);pointer-events:none;z-index:1;"></div>
+      <div style="position:absolute;width:220px;height:220px;right:-50px;bottom:60px;border:8px solid ${T.sqA};transform:rotate(12deg);pointer-events:none;z-index:1;"></div>
+      <div style="position:absolute;width:160px;height:160px;left:-40px;top:200px;border:8px solid ${T.sqB};transform:rotate(-12deg);pointer-events:none;z-index:1;"></div>
 
       ${stripe(14)}
 
@@ -741,29 +959,31 @@
           <span style="display:inline-block;transform:skewX(12deg);font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#fff;padding:8px 20px;">Pre-Order Open</span>
         </div>
         <div style="display:inline-block;transform:skewX(-12deg);background:${GOLD};">
-          <span style="display:inline-block;transform:skewX(12deg);font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:${INK};padding:8px 20px;">ETA ${escapeHtml(product.eta)}</span>
+          <span style="display:inline-block;transform:skewX(12deg);font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#14161C;padding:8px 20px;">ETA ${escapeHtml(product.eta)}</span>
         </div>
       </div>
 
+      ${imageBlock}
+
       <!-- product name -->
       <div style="position:relative;z-index:2;padding:40px 56px 0;">
-        <span style="display:block;font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;letter-spacing:0.35em;text-transform:uppercase;color:${GOLD};margin-bottom:12px;">Now Available for Pre-Order</span>
-        <h2 style="font-family:'Rajdhani',sans-serif;font-size:5rem;font-weight:700;line-height:0.92;color:#fff;text-transform:uppercase;letter-spacing:-0.01em;max-width:900px;word-break:break-word;">${escapeHtml(product.name)}</h2>
+        <span style="display:block;font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;letter-spacing:0.35em;text-transform:uppercase;color:${T.eyebrow};margin-bottom:12px;">Now Available for Pre-Order</span>
+        <h2 style="font-family:'Rajdhani',sans-serif;font-size:5rem;font-weight:700;line-height:0.92;color:${T.headline};text-transform:uppercase;letter-spacing:-0.01em;max-width:900px;word-break:break-word;">${escapeHtml(product.name)}</h2>
       </div>
 
       <!-- stats -->
       <div style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:48px 56px 0;">
-        <div style="background:${INK2};padding:26px 24px;border-left:4px solid ${BLUE};">
+        <div style="background:${T.tileBg};padding:26px 24px;border-left:4px solid ${BLUE};">
           <div style="font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${STEEL};margin-bottom:10px;">Price / Unit</div>
-          <div style="font-family:'Rajdhani',sans-serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1;">₱${product.unitPrice.toLocaleString()}</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:2.8rem;font-weight:700;color:${T.headline};line-height:1;">₱${product.unitPrice.toLocaleString()}</div>
         </div>
-        <div style="background:${INK2};padding:26px 24px;border-left:4px solid ${RED};">
+        <div style="background:${T.tileBg};padding:26px 24px;border-left:4px solid ${RED};">
           <div style="font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${STEEL};margin-bottom:10px;">Price / Case (${product.unitsPerCase} units)</div>
-          <div style="font-family:'Rajdhani',sans-serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1;">₱${product.casePrice.toLocaleString()}</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:2.8rem;font-weight:700;color:${T.headline};line-height:1;">₱${product.casePrice.toLocaleString()}</div>
         </div>
       </div>
 
-      <div style="position:relative;z-index:2;margin:20px 56px 0;background:${GOLD};color:${INK};padding:30px 32px;clip-path:polygon(0 8px, 8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);">
+      <div style="position:relative;z-index:2;margin:20px 56px 0;background:${GOLD};color:#14161C;padding:30px 32px;clip-path:polygon(0 8px, 8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);">
         <div style="font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;opacity:0.75;margin-bottom:8px;">Down Payment (30%) — Reserve Your Slot</div>
         <div style="font-family:'Rajdhani',sans-serif;font-size:3.4rem;font-weight:700;line-height:1;">₱${dp.toLocaleString()}</div>
         <div style="font-family:'Poppins',sans-serif;font-size:0.9rem;font-weight:600;opacity:0.75;margin-top:8px;">30% DP per unit to reserve</div>
@@ -776,12 +996,18 @@
       <div style="position:relative;z-index:2;display:flex;gap:56px;padding:40px 56px 0;">
         <div>
           <div style="font-family:'Space Mono',monospace;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:${STEEL};margin-bottom:10px;">Pre-Order Deadline</div>
-          <div style="font-family:'Rajdhani',sans-serif;font-size:2.1rem;font-weight:700;color:${GOLD};">${escapeHtml(deadline)}</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:2.1rem;font-weight:700;color:${T.metaDeadline};">${escapeHtml(deadline)}</div>
         </div>
         <div>
           <div style="font-family:'Space Mono',monospace;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:${STEEL};margin-bottom:10px;">Estimated Arrival (ETA)</div>
-          <div style="font-family:'Rajdhani',sans-serif;font-size:2.1rem;font-weight:700;color:#fff;">${escapeHtml(product.eta)}</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:2.1rem;font-weight:700;color:${T.metaEta};">${escapeHtml(product.eta)}</div>
         </div>
+      </div>
+
+      <!-- CTA / link segment -->
+      <div style="position:relative;z-index:2;margin:40px 56px 0;background:${T.ctaBg};padding:24px 28px;border-left:4px solid ${GOLD};display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <span style="font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.ctaLabel};">Reserve Your Slot At</span>
+        <span style="font-family:'Rajdhani',sans-serif;font-size:1.7rem;font-weight:700;letter-spacing:0.01em;color:${T.ctaUrl};">${PREORDER_URL}</span>
       </div>
 
       <!-- footer -->
@@ -839,6 +1065,7 @@
   // BOOT
   // ─────────────────────────────────────
   addLogoUpload();
+  initProductImageUpload();
   init();
 </script>
 </body>
